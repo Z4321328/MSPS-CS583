@@ -270,8 +270,9 @@ def remove_infrequent_items(item_sequences, min_support_count):
 	# for python 3 and above version, you may need to add one line as follow to make sure that
 	# support_counts does not contain any empty key, but for python 2.7, you don't need to use this line
 	support_counts = {key: value for key, value in support_counts.items() if key is not ''} # line for python 3.x, not for python 2.7
-	# comments for above lines: in the project, the dataset eventually will include an empty key, which I have no idea why it will 
-	# generate. I go through dataset and I could not find why it will generate empty as a item.
+	# comments for above lines: in the project, if the dataset contains empty line within data, for python 3.x, it will count it as '', which 
+	# means that it will generate dictionary: {'': 1}, but for python 2.7, we don't have to consider this problem.
+	# the method to modify in python 3 is to add the above line to remove this dict.
 	# remove the infrequent items from the sequence database
 	filtered_item_sequences = [[[item for item in itemset if support_counts.get(item) >= min_support_count or item == '_'] for itemset in sequence] for sequence in item_sequences]
 	return remove_empty_elements(filtered_item_sequences) # return the new sequence database
