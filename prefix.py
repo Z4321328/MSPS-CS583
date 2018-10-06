@@ -267,7 +267,11 @@ def remove_infrequent_items(item_sequences, min_support_count):
 	# get the support count for each intem in supplied sequence databse
 	flattened_sequences = [ list(set(itertools.chain(*sequence))) for sequence in item_sequences]
 	support_counts = dict(Counter(item for flattened_sequence in flattened_sequences for item in flattened_sequence))
-
+	# for python 3 and above version, you may need to add one line as follow to make sure that
+	# support_counts does not contain any empty key, but for python 2.7, you don't need to use this line
+	support_counts = {key: value for key, value in support_counts.items() if key is not ''} # line for python 3.x, not for python 2.7
+	# comments for above lines: in the project, the dataset eventually will include an empty key, which I have no idea why it will 
+	# generate. I go through dataset and I could not find why it will generate empty as a item.
 	# remove the infrequent items from the sequence database
 	filtered_item_sequences = [[[item for item in itemset if support_counts.get(item) >= min_support_count or item == '_'] for itemset in sequence] for sequence in item_sequences]
 	return remove_empty_elements(filtered_item_sequences) # return the new sequence database
